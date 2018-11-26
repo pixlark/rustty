@@ -58,10 +58,10 @@ type EventBuffer = VecDeque<Event>;
 /// assert_eq!(term[(0, 2)].fg(), Color::Blue);
 /// ```
 pub struct Terminal {
+    pub cols: usize, // Number of columns in the terminal window.
+    pub rows: usize, // Number of rows in the terminal window.
     termctl: TermCtl, // Terminal controller (termios).
     tty: File, // Underlying terminal file.
-    cols: usize, // Number of columns in the terminal window.
-    rows: usize, // Number of rows in the terminal window.
     driver: Driver, // Terminal driver (terminfo).
     backbuffer: CellBuffer, // Internal backbuffer.
     frontbuffer: CellBuffer, // Internal frontbuffer.
