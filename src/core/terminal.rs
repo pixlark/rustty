@@ -476,6 +476,16 @@ impl Terminal {
         }
     }
 
+    /// Does the work of IndexMut, but with bounds checking
+    pub fn safe_set(&mut self, pos: Pos, cell: Cell) -> Option<()> {
+        if pos.0 >= self.cols || pos.1 >= self.rows {
+            None
+        } else {
+            self[pos] = cell;
+            Some(())
+        }
+    }
+    
     fn send_cursor(&mut self) -> Result<(), Error> {
         if let Some((cx, cy)) = self.cursor.pos() {
             try!(self.outbuffer.write_all(&self.driver.get(DevFn::SetCursor(cx, cy))));
@@ -628,16 +638,6 @@ impl Terminal {
             print!("{}", error);
         }
         Ok(())
-    }
-
-    /// Does the work of IndexMut, but with bounds checking
-    fn safe_set(&mut self, pos: Pos, cell: Cell) -> Option<()> {
-        if pos.0 >= self.cols || pos.1 >= self.rows {
-            None
-        } else {
-            self[pos] = cell;
-            Some(())
-        }
     }
 }
 
