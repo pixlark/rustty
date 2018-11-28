@@ -58,8 +58,8 @@ type EventBuffer = VecDeque<Event>;
 /// assert_eq!(term[(0, 2)].fg(), Color::Blue);
 /// ```
 pub struct Terminal {
-    pub cols: usize, // Number of columns in the terminal window.
-    pub rows: usize, // Number of rows in the terminal window.
+    cols: usize, // Number of columns in the terminal window.
+    rows: usize, // Number of rows in the terminal window.
     termctl: TermCtl, // Terminal controller (termios).
     tty: File, // Underlying terminal file.
     driver: Driver, // Terminal driver (terminfo).
@@ -628,6 +628,16 @@ impl Terminal {
             print!("{}", error);
         }
         Ok(())
+    }
+
+    /// Does the work of IndexMut, but with bounds checking
+    fn safe_set(&mut self, pos: Pos, cell: Cell) -> Option<()> {
+        if pos.0 >= self.cols || pos.1 >= self.rows {
+            None
+        } else {
+            self[pos] = cell;
+            Some(())
+        }
     }
 }
 
